@@ -14,15 +14,7 @@ Follow the official [ROS 2 installation guide](https://docs.ros.org/en/jazzy/Ins
 
 ## Building the Project
 
-### Build with colcon
-
-```bash
-colcon build
-```
-
-## Run the sample talker node
-
-From the workspace root, build and run the `talker` node with these steps:
+From the workspace root, build and run the sample `talker` node with these steps:
 
 ```bash
 # build (with symlink install and export compile commands)
