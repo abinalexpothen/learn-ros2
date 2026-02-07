@@ -20,10 +20,18 @@ ament_target_dependencies(subscriber_node rclcpp std_msgs master_ros2_interface)
 add_executable(parameter_node src/parameter_node.cpp)
 ament_target_dependencies(parameter_node rclcpp std_msgs master_ros2_interface)
 
+add_executable(service_server_node src/service_server_node.cpp)
+ament_target_dependencies(service_server_node rclcpp master_ros2_interface)
+
+add_executable(service_client_node src/service_client_node.cpp)
+ament_target_dependencies(service_client_node rclcpp master_ros2_interface)
+
 install(TARGETS
   publisher_node
   subscriber_node
   parameter_node
+  service_server_node
+  service_client_node
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
