@@ -8,6 +8,7 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_action REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(master_ros2_interface REQUIRED)
 
@@ -26,12 +27,20 @@ ament_target_dependencies(service_server_node rclcpp master_ros2_interface)
 add_executable(service_client_node src/service_client_node.cpp)
 ament_target_dependencies(service_client_node rclcpp master_ros2_interface)
 
+add_executable(action_server_node src/action_server_node.cpp)
+ament_target_dependencies(action_server_node rclcpp rclcpp_action master_ros2_interface)
+
+add_executable(action_client_node src/action_client_node.cpp)
+ament_target_dependencies(action_client_node rclcpp rclcpp_action master_ros2_interface)
+
 install(TARGETS
   publisher_node
   subscriber_node
   parameter_node
   service_server_node
   service_client_node
+  action_server_node
+  action_client_node
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
