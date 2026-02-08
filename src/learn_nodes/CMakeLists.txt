@@ -8,15 +8,28 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_components REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
-add_executable(the_node src/the_node.cpp)
-ament_target_dependencies(the_node rclcpp)
+add_executable(node_init_option1 src/node_init_option1.cpp)
+ament_target_dependencies(node_init_option1 rclcpp)
+
+add_executable(node_init_option2 src/node_init_option2.cpp)
+ament_target_dependencies(node_init_option2 rclcpp)
+
+add_library(node_init_components SHARED src/node_init_components.cpp)
+# For Windows compatibility
+target_compile_definitions(node_init_components PRIVATE "COMPOSITION_BUILDING_DLL")
+
+ament_target_dependencies(node_init_components rclcpp rclcpp_components)
+rclcpp_components_register_nodes(node_init_components "our_namespace::OurClass")
 
 install(TARGETS
-the_node
+node_init_option1
+node_init_option2
+node_init_components
 DESTINATION lib/${PROJECT_NAME})
 
 
