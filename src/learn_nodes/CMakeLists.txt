@@ -9,6 +9,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -19,6 +20,9 @@ ament_target_dependencies(node_init_option1 rclcpp)
 add_executable(node_init_option2 src/node_init_option2.cpp)
 ament_target_dependencies(node_init_option2 rclcpp)
 
+add_executable(my_managed_node src/my_managed_node.cpp)
+ament_target_dependencies(my_managed_node rclcpp rclcpp_lifecycle)
+
 add_library(node_init_components SHARED src/node_init_components.cpp)
 # For Windows compatibility
 target_compile_definitions(node_init_components PRIVATE "COMPOSITION_BUILDING_DLL")
@@ -27,11 +31,17 @@ ament_target_dependencies(node_init_components rclcpp rclcpp_components)
 rclcpp_components_register_nodes(node_init_components "our_namespace::OurClass")
 
 install(TARGETS
-node_init_option1
-node_init_option2
-node_init_components
-DESTINATION lib/${PROJECT_NAME})
+  node_init_option1
+  node_init_option2
+  node_init_components
+  my_managed_node
+  DESTINATION lib/${PROJECT_NAME}
+)
 
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
