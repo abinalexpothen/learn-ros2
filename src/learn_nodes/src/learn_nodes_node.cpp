@@ -25,6 +25,8 @@ namespace learn_nodes_exercise
 
             // do something based on the request
 
+            response->response = "Hey, you requested something!";
+
             RCLCPP_INFO(this->get_logger(), "Sending response: %s", response->response.c_str());
         }
 

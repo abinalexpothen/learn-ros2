@@ -46,12 +46,19 @@ add_dependencies(learn_nodes_node ${PROJECT_NAME}__rosidl_typesupport_cpp)
 target_compile_definitions(learn_nodes_node PRIVATE "COMPOSITION_BUILDING_DLL")
 rclcpp_components_register_nodes(learn_nodes_node "learn_nodes_exercise::LearnNodesNode")
 
+# Separate the libraries from the executables
+install(TARGETS
+  node_init_components
+  learn_nodes_node
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
 install(TARGETS
   node_init_option1
   node_init_option2
-  node_init_components
   my_managed_node
-  learn_nodes_node
   DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -72,4 +79,5 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+ament_export_libraries(learn_nodes_node)
 ament_package()
