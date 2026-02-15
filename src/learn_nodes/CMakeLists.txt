@@ -10,9 +10,14 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+"srv/LearnNodesExerciseService.srv"
+)
 
 add_executable(node_init_option1 src/node_init_option1.cpp)
 ament_target_dependencies(node_init_option1 rclcpp)
@@ -24,17 +29,29 @@ add_executable(my_managed_node src/my_managed_node.cpp)
 ament_target_dependencies(my_managed_node rclcpp rclcpp_lifecycle)
 
 add_library(node_init_components SHARED src/node_init_components.cpp)
-# For Windows compatibility
+# Windows support
 target_compile_definitions(node_init_components PRIVATE "COMPOSITION_BUILDING_DLL")
-
 ament_target_dependencies(node_init_components rclcpp rclcpp_components)
 rclcpp_components_register_nodes(node_init_components "our_namespace::OurClass")
+
+add_library(learn_nodes_node SHARED src/learn_nodes_node.cpp)
+# 1. Standard dependencies
+ament_target_dependencies(learn_nodes_node rclcpp rclcpp_components)
+# 2. link it to the generated service ("typesupport targets")
+rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
+target_link_libraries(learn_nodes_node "${cpp_typesupport_target}")
+# 3. Explicityly force headers to be generated BEFORE this library compiles
+add_dependencies(learn_nodes_node ${PROJECT_NAME}__rosidl_typesupport_cpp)
+# Windows support
+target_compile_definitions(learn_nodes_node PRIVATE "COMPOSITION_BUILDING_DLL")
+rclcpp_components_register_nodes(learn_nodes_node "learn_nodes_exercise::LearnNodesNode")
 
 install(TARGETS
   node_init_option1
   node_init_option2
   node_init_components
   my_managed_node
+  learn_nodes_node
   DESTINATION lib/${PROJECT_NAME}
 )
 
