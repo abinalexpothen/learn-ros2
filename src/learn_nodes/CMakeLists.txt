@@ -28,12 +28,14 @@ ament_target_dependencies(node_init_option2 rclcpp)
 add_executable(my_managed_node src/my_managed_node.cpp)
 ament_target_dependencies(my_managed_node rclcpp rclcpp_lifecycle)
 
+# component node: node_init_components
 add_library(node_init_components SHARED src/node_init_components.cpp)
 # Windows support
 target_compile_definitions(node_init_components PRIVATE "COMPOSITION_BUILDING_DLL")
 ament_target_dependencies(node_init_components rclcpp rclcpp_components)
 rclcpp_components_register_nodes(node_init_components "our_namespace::OurClass")
 
+# component node: learn_nodes_node
 add_library(learn_nodes_node SHARED src/learn_nodes_node.cpp)
 # 1. Standard dependencies
 ament_target_dependencies(learn_nodes_node rclcpp rclcpp_components)
@@ -45,6 +47,20 @@ add_dependencies(learn_nodes_node ${PROJECT_NAME}__rosidl_typesupport_cpp)
 # Windows support
 target_compile_definitions(learn_nodes_node PRIVATE "COMPOSITION_BUILDING_DLL")
 rclcpp_components_register_nodes(learn_nodes_node "learn_nodes_exercise::LearnNodesNode")
+
+# component node: learn_nodes_managed_1
+add_library(learn_nodes_managed_1 SHARED src/learn_nodes_managed_1.cpp)
+# windows support
+target_compile_definitions(learn_nodes_managed_1 PRIVATE "COMPOSITION_BUILDING_DLL")
+ament_target_dependencies(learn_nodes_managed_1 rclcpp rclcpp_lifecycle rclcpp_components)
+rclcpp_components_register_nodes(learn_nodes_managed_1 "learn_nodes_exercise::LearnNodesManaged1")
+
+# component node: learn_nodes_managed_2
+add_library(learn_nodes_managed_2 SHARED src/learn_nodes_managed_2.cpp)
+# windows support
+target_compile_definitions(learn_nodes_managed_2 PRIVATE "COMPOSITION_BUILDING_DLL")
+ament_target_dependencies(learn_nodes_managed_2 rclcpp rclcpp_lifecycle rclcpp_components)
+rclcpp_components_register_nodes(learn_nodes_managed_2 "learn_nodes_exercise::LearnNodesManaged2")
 
 # Separate the libraries from the executables
 install(TARGETS
