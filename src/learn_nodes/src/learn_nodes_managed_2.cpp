@@ -8,7 +8,7 @@ namespace learn_nodes_exercise
     class LearnNodesManaged2 : public rclcpp_lifecycle::LifecycleNode
     {
         public:
-        LearnNodesManaged2(const rclcpp::NodeOptions &options) : rclcpp_lifecycle::LifecycleNode("learn_nodes_managed_1", options)
+        LearnNodesManaged2(const rclcpp::NodeOptions &options) : rclcpp_lifecycle::LifecycleNode("learn_nodes_managed_2", options)
         {
             // some constructor
         }

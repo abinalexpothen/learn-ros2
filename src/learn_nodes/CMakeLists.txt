@@ -11,6 +11,7 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
+find_package(lifecycle_msgs REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -38,7 +39,7 @@ rclcpp_components_register_nodes(node_init_components "our_namespace::OurClass")
 # component node: learn_nodes_node
 add_library(learn_nodes_node SHARED src/learn_nodes_node.cpp)
 # 1. Standard dependencies
-ament_target_dependencies(learn_nodes_node rclcpp rclcpp_components)
+ament_target_dependencies(learn_nodes_node rclcpp rclcpp_components lifecycle_msgs)
 # 2. link it to the generated service ("typesupport targets")
 rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
 target_link_libraries(learn_nodes_node "${cpp_typesupport_target}")
@@ -66,6 +67,8 @@ rclcpp_components_register_nodes(learn_nodes_managed_2 "learn_nodes_exercise::Le
 install(TARGETS
   node_init_components
   learn_nodes_node
+  learn_nodes_managed_1
+  learn_nodes_managed_2
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
@@ -95,5 +98,8 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_export_libraries(learn_nodes_node)
+# Use the simpler export command
+ament_export_libraries(learn_nodes_node learn_nodes_managed_1 learn_nodes_managed_2)
+
+# This is the vital line that creates the 'phone book' for ROS 2
 ament_package()
