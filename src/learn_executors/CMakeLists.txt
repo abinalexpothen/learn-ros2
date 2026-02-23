@@ -10,7 +10,11 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_srvs REQUIRED)
 
-add_library(${PROJECT_NAME} SHARED src/deadlock_demo_server.cpp)
+add_library(${PROJECT_NAME} 
+  SHARED 
+  src/deadlock_demo_server.cpp
+  src/deadlock_demo_client.cpp
+)
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC

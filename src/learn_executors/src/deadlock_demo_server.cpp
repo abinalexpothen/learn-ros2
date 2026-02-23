@@ -6,7 +6,7 @@ DeadlockDemoServer::DeadlockDemoServer(const rclcpp::NodeOptions &options) : rcl
     RCLCPP_INFO(get_logger(), "Service started");
 }
 
-void DeadlockDemoServer::callbackFunction(std_srvs::srv::Empty::Request::SharedPtr srv_request, std_srvs::srv::Empty::Response::SharedPtr srv_response)
+void DeadlockDemoServer::callbackFunction([[maybe_unused]] std_srvs::srv::Empty::Request::SharedPtr srv_request, [[maybe_unused]] std_srvs::srv::Empty::Response::SharedPtr srv_response)
 {
     RCLCPP_INFO(get_logger(), "Request received!");
 }
