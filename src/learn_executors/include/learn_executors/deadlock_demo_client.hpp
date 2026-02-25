@@ -4,7 +4,7 @@
 class DeadlockDemoClient : public rclcpp::Node
 {
     public:
-    DeadlockDemoClient(rclcpp::NodeOptions &options);
+    DeadlockDemoClient(const rclcpp::NodeOptions &options);
     
     private:
     void timerCallback();

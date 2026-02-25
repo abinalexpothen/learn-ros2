@@ -10,22 +10,53 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_srvs REQUIRED)
 
-add_library(${PROJECT_NAME} 
-  SHARED 
-  src/deadlock_demo_server.cpp
-  src/deadlock_demo_client.cpp
+include(FetchContent)
+
+FetchContent_Declare(
+  tracy
+  GIT_REPOSITORY https://github.com/wolfpld/tracy.git
+  GIT_TAG        v0.13.1  # Dec 11, 2025 release
 )
 
-target_include_directories(${PROJECT_NAME}
-  PUBLIC
-  $<INSTALL_INTERFACE:include>
+FetchContent_MakeAvailable(tracy)
+
+add_executable(deadlock_server_node src/deadlock_demo_server.cpp)
+target_include_directories(deadlock_server_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+ament_target_dependencies(deadlock_server_node 
+  rclcpp 
+  std_srvs
 )
 
-target_link_libraries(${PROJECT_NAME}
-  PUBLIC
-  rclcpp::rclcpp
-  ${std_srvs_TARGETS}
+add_executable(deadlock_client_node src/deadlock_demo_client.cpp)
+target_include_directories(deadlock_client_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+ament_target_dependencies(deadlock_client_node 
+  rclcpp 
+  std_srvs
+)
+
+# Tracy for the Server Node
+target_compile_definitions(deadlock_server_node PUBLIC TRACY_ENABLE)
+target_link_libraries(deadlock_server_node Tracy::TracyClient)
+
+# Tracy for the Client Node
+target_compile_definitions(deadlock_client_node PUBLIC TRACY_ENABLE)
+target_link_libraries(deadlock_client_node Tracy::TracyClient)
+
+install(TARGETS
+  deadlock_server_node
+  deadlock_client_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
