@@ -13,8 +13,8 @@ def generate_launch_description():
 
     client_node = Node(
         package='learn_executors',
-        name='deadlock_demo_client',
-        executable='deadlock_client_node',
+        name='fix_deadlock_demo_client',
+        executable='fix_deadlock_client_node',
         output='screen'
     )
 

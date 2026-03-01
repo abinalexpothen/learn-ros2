@@ -11,16 +11,19 @@ find_package(rclcpp REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(tracy_vendor REQUIRED)
 
-add_executable(deadlock_server_node src/deadlock_demo_server.cpp)
-target_include_directories(deadlock_server_node PUBLIC
+add_executable(demo_server_node src/demo_server.cpp)
+target_include_directories(demo_server_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
-ament_target_dependencies(deadlock_server_node 
+ament_target_dependencies(demo_server_node 
   rclcpp 
   std_srvs
   tracy_vendor
 )
+
+target_compile_definitions(demo_server_node PUBLIC TRACY_ENABLE)
+target_link_libraries(demo_server_node tracy_vendor::TracyClient)
 
 add_executable(deadlock_client_node src/deadlock_demo_client.cpp)
 target_include_directories(deadlock_client_node PUBLIC
@@ -33,17 +36,28 @@ ament_target_dependencies(deadlock_client_node
   tracy_vendor
 )
 
-# Tracy for the Server Node
-target_compile_definitions(deadlock_server_node PUBLIC TRACY_ENABLE)
-target_link_libraries(deadlock_server_node tracy_vendor::TracyClient)
-
-# Tracy for the Client Node
 target_compile_definitions(deadlock_client_node PUBLIC TRACY_ENABLE)
 target_link_libraries(deadlock_client_node tracy_vendor::TracyClient)
 
+add_executable(fix_deadlock_client_node src/fix_deadlock_demo_client.cpp)
+target_include_directories(fix_deadlock_client_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+
+ament_target_dependencies(fix_deadlock_client_node
+  rclcpp
+  std_srvs
+  tracy_vendor
+)
+
+target_compile_definitions(fix_deadlock_client_node PUBLIC TRACY_ENABLE)
+target_link_libraries(fix_deadlock_client_node tracy_vendor::TracyClient)
+
 install(TARGETS
-  deadlock_server_node
+  demo_server_node
   deadlock_client_node
+  fix_deadlock_client_node
   DESTINATION lib/${PROJECT_NAME}
 )
 
