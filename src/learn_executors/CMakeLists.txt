@@ -54,10 +54,26 @@ ament_target_dependencies(fix_deadlock_client_node
 target_compile_definitions(fix_deadlock_client_node PUBLIC TRACY_ENABLE)
 target_link_libraries(fix_deadlock_client_node tracy_vendor::TracyClient)
 
+add_executable(fix_deadlock_single_threaded_exec_node src/fix_deadlock_single_threaded_exec.cpp)
+target_include_directories(fix_deadlock_single_threaded_exec_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+
+ament_target_dependencies(fix_deadlock_single_threaded_exec_node
+  rclcpp
+  std_srvs
+  tracy_vendor
+)
+
+target_compile_definitions(fix_deadlock_single_threaded_exec_node PUBLIC TRACY_ENABLE)
+target_link_libraries(fix_deadlock_single_threaded_exec_node tracy_vendor::TracyClient)
+
 install(TARGETS
   demo_server_node
   deadlock_client_node
   fix_deadlock_client_node
+  fix_deadlock_single_threaded_exec_node
   DESTINATION lib/${PROJECT_NAME}
 )
 
